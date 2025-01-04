@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Twitter Trends Scraper</title>
+    <script>
+      // Async function to fetch and display trends
+      async function runScript() {
+        try {
+          // Fetch the response from the Flask endpoint
+          const response = await fetch("/run-script");
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+
+          // Parse the JSON data
+          const data = await response.json();
+
+          // Update the result section with formatted data
+          document.getElementById("result").innerHTML = `
+                    <p>These are the most happening topics as on ${
+                      data.timestamp
+                    }:</p>
+                    <ul>
+                        <li>${data.trend1}</li>
+                        <li>${data.trend2}</li>
+                        <li>${data.trend3}</li>
+                        <li>${data.trend4}</li>
+                        <li>${data.trend5}</li>
+                    </ul>
+                    <p>The IP address used for this query was ${
+                      data.ip_address
+                    }.</p>
+                    <h3>JSON Extract:</h3>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                    <button onclick="runScript()">Click here to run the query again</button>
+                `;
+        } catch (error) {
+          // Handle errors
+          console.error("Error fetching data:", error);
+          document.getElementById("result").innerHTML = `
+                    <p>Error fetching data. Please try again later.</p>
+                `;
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <button onclick="runScript()">Click here to run the script</button>
+    <div id="result"></div>
+  </body>
+</html>
